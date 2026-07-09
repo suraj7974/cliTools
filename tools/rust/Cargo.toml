@@ -1,0 +1,5 @@
+# Cargo *workspace* (virtual manifest — no package of its own).
+# Each Rust tool is a member crate; add new ones to `members`.
+[workspace]
+resolver = "2"
+members = ["sizehog"]

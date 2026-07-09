@@ -1,0 +1,21 @@
+# ---- Go ----
+bin/
+*.exe
+*.test
+*.out
+
+# ---- Rust ----
+target/
+**/target/
+
+# ---- Node / website ----
+node_modules/
+.next/
+dist/
+.turbo/
+
+# ---- OS / editor ----
+.DS_Store
+.idea/
+.vscode/
+*.log

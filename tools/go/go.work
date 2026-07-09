@@ -1,0 +1,5 @@
+go 1.22
+
+// Each Go tool is its own module, joined here into one workspace so they
+// build together and can share future local helper modules.
+use ./killport

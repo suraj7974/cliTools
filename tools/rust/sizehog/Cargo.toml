@@ -1,0 +1,9 @@
+[package]
+name = "sizehog"
+version = "0.1.0"
+edition = "2021"
+description = "Find the biggest files under a path."
+
+[dependencies]
+# Intentionally none yet — built on std so it compiles offline.
+# Later: `walkdir` for robust traversal, `clap` for arg parsing/flags.
