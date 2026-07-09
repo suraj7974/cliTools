@@ -7,7 +7,7 @@ handling, config files, packaging, and distribution.
 Primary languages: **Go** (default) and **Rust** (for file/perf-heavy tools).
 A **website** documenting every tool lives in `website/`.
 
-> Idea backlog lives in `Feasible CLI Tools.md` and `CLI Tool Ideas for Beginners.md`.
+> Progress tracker: [`PROGRESS.md`](PROGRESS.md). Idea backlog: [`docs/`](docs/).
 
 ## How this monorepo works
 
