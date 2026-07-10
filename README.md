@@ -6,7 +6,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/suraj7974/cliTools/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/suraj7974/cliTools?sort=semver"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
@@ -19,38 +18,6 @@ runtime or dependencies between them.
 ## Tools
 
 Click a tool to expand its guide.
-
-<details>
-<summary><b>🦀 sizehog</b> — find the biggest files under a directory</summary>
-
-<br>
-
-Find the biggest files under any directory, sorted, human-readable.
-
-**Install** (pick one):
-
-```bash
-# Homebrew
-brew install suraj7974/tap/sizehog
-
-# install script (macOS/Linux) — no toolchain needed
-curl --proto '=https' --tlsv1.2 -LsSf \
-  https://github.com/suraj7974/cliTools/releases/latest/download/sizehog-installer.sh | sh
-
-# crates.io (needs Rust)
-cargo install sizehog
-```
-
-**Use:**
-
-```bash
-sizehog .            # biggest files under the current directory
-sizehog ~/Downloads  # ...under any path
-```
-
-More: [`tools/rust/sizehog`](tools/rust/sizehog)
-
-</details>
 
 <details>
 <summary><b>🦀 pips</b> — ghost-text suggestions for <code>pip install</code> as you type</summary>
@@ -135,6 +102,38 @@ More: [`tools/rust/pips`](tools/rust/pips)
 
 </details>
 
+<details>
+<summary><b>🦀 sizehog</b> — find the biggest files under a directory</summary>
+
+<br>
+
+Find the biggest files under any directory, sorted, human-readable.
+
+**Install** (pick one):
+
+```bash
+# Homebrew
+brew install suraj7974/tap/sizehog
+
+# install script (macOS/Linux) — no toolchain needed
+curl --proto '=https' --tlsv1.2 -LsSf \
+  https://github.com/suraj7974/cliTools/releases/latest/download/sizehog-installer.sh | sh
+
+# crates.io (needs Rust)
+cargo install sizehog
+```
+
+**Use:**
+
+```bash
+sizehog .            # biggest files under the current directory
+sizehog ~/Downloads  # ...under any path
+```
+
+More: [`tools/rust/sizehog`](tools/rust/sizehog)
+
+</details>
+
 ---
 
 ## Repository layout
@@ -144,8 +143,8 @@ cliTools/
 ├── tools/
 │   ├── go/          # Go tools   — one module per tool (go.work workspace)
 │   └── rust/        # Rust tools — one crate per tool (Cargo workspace)
-│       ├── sizehog/
-│       └── pips/
+│       ├── pips/
+│       └── sizehog/
 └── website/         # docs site (coming soon)
 ```
 
