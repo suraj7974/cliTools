@@ -2,7 +2,7 @@
 # Each Rust tool is a member crate; add new ones to `members`.
 [workspace]
 resolver = "2"
-members = ["sizehog"]
+members = ["sizehog", "pips"]
 
 # NOTE: dist config now lives in the repo-root `dist-workspace.toml`.
 # Only the build profile stays here (profiles must be in Cargo.toml).

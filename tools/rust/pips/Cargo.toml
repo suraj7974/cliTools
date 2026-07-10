@@ -1,0 +1,13 @@
+[package]
+name = "pips"
+version = "0.1.0"
+edition = "2021"
+description = "Ghost-text package suggestions for `pip install` in your shell."
+repository = "https://github.com/suraj7974/cliTools"
+homepage = "https://github.com/suraj7974/cliTools"
+license = "MIT"
+
+[dependencies]
+ureq = "2"          # small blocking HTTP client (pure-Rust TLS, cross-compiles cleanly)
+serde_json = "1"    # parse the registry responses
+dirs = "5"          # OS-appropriate cache directory
