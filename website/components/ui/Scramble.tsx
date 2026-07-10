@@ -48,7 +48,9 @@ export function Scramble({
     const run = () => {
       if (done.current || !el) return;
       done.current = true;
-      split = new SplitType(el, { types: "chars" });
+      // split words AND chars: chars nest inside word spans, so lines can
+      // only break between words — never mid-word
+      split = new SplitType(el, { types: "words,chars" });
       const chars = split.chars ?? [];
 
       ctx = gsap.context(() => {
