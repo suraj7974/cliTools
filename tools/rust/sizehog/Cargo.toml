@@ -3,6 +3,8 @@ name = "sizehog"
 version = "0.1.0"
 edition = "2021"
 description = "Find the biggest files under a path."
+repository = "https://github.com/suraj7974/cli-tools"
+license = "MIT"
 
 [dependencies]
 # Intentionally none yet — built on std so it compiles offline.
