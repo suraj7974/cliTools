@@ -20,20 +20,22 @@ runtime or dependencies between them.
 Click a tool to expand its guide.
 
 <details>
-<summary><b>🦀 pips</b> — ghost-text suggestions for <code>pip install</code> as you type</summary>
+<summary><b>🦀 pips</b> — ghost-text package suggestions for pip / npm / pnpm / yarn</summary>
 
 <br>
 
 `pips` gets you the right package name two ways:
 
-- **Ghost text** — as you type `pip install num`, your shell shows the
-  most-popular match (`numpy`) as dim text; press <kbd>→</kbd> to accept,
-  <kbd>Enter</kbd> to run. *(needs the zsh-autosuggestions plugin — step 2)*
+- **Ghost text** — as you type `pip install num` (or `npm install expr`,
+  `pnpm add lod`, `yarn add …`), your shell shows the most-popular match as dim
+  text; press <kbd>→</kbd> to accept, <kbd>Enter</kbd> to run.
+  *(needs the zsh-autosuggestions plugin — step 2)*
 - **Direct** — run `pips install num` and it resolves to the top package and runs
   `pip install` for you, asking first. *(works in any shell, no plugin needed)*
 
 ```
 $ pip install num‸numpy      ← ghost text; → to accept
+$ npm install expr‸ess
 $ pips install num           → "Install 'numpy'? [Y/n]" → pip install numpy
 ```
 
@@ -95,7 +97,7 @@ text needs zsh**, so for that experience use **WSL** with zsh-autosuggestions.
 ```bash
 pips list num          # numpy, numba, numexpr, ...
 pips list -n 5 requ    # top 5
-pips list -r npm expr  # live npm search
+pips list -r npm expr  # express, express-rate-limit, ...
 ```
 
 More: [`tools/rust/pips`](tools/rust/pips)

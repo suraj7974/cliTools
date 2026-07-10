@@ -1,17 +1,18 @@
-//! pips — ghost-text package suggestions for `pip install`.
+//! pips — ghost-text package suggestions for `pip` / `npm` / `pnpm` / `yarn`.
 //!
-//! Powers inline autosuggestion: as you type `pip install num`, your shell
-//! shows `numpy` as dim ghost text (via zsh-autosuggestions). Also usable
-//! directly:
+//! Powers inline autosuggestion: as you type `pip install num` (or `npm install
+//! expr`, `pnpm add lod`, ...), your shell shows the top package as dim ghost
+//! text (via zsh-autosuggestions). Also usable directly:
 //!
-//!     pips best num          # -> numpy              (top match, used by the shell hook)
-//!     pips list -n 5 num     # -> numpy, numba, ...  (top N)
-//!     pips list -r npm expr  # -> express, ...       (npm live search)
-//!     pips update            # refresh the cached PyPI package list
-//!     pips init zsh          # print the shell hook to add to ~/.zshrc
+//!     pips best num           # -> numpy               (top match, used by the shell hook)
+//!     pips list -n 5 num      # -> numpy, numba, ...    (top N)
+//!     pips best -r npm expr   # -> express              (npm)
+//!     pips update             # refresh the cached package lists
+//!     pips init zsh           # print the shell hook to add to ~/.zshrc
 //!
-//! PyPI has no live search API, so we cache a popularity-ranked list of the
-//! most-used packages locally (flattened to one name per line for speed).
+//! Neither registry offers a good live prefix-search API, so we cache
+//! popularity-ranked lists (PyPI top packages; npm-high-impact) locally,
+//! flattened to one name per line for fast keystroke-time matching.
 
 use std::error::Error;
 use std::fs;
@@ -22,6 +23,9 @@ use std::time::{Duration, SystemTime};
 /// Community-maintained dataset of the most-downloaded PyPI packages,
 /// ordered most-popular first. Refreshed regularly upstream.
 const PYPI_TOP_URL: &str = "https://hugovk.github.io/top-pypi-packages/top-pypi-packages.min.json";
+
+/// npm-high-impact ships a download-ranked list of ~16k packages as a JS module.
+const NPM_TOP_URL: &str = "https://unpkg.com/npm-high-impact/lib/top-download.js";
 
 /// How long a cached list is considered fresh.
 const CACHE_MAX_AGE: Duration = Duration::from_secs(7 * 24 * 60 * 60);
@@ -56,13 +60,13 @@ fn main() {
 
 fn usage() {
     eprint!(
-        "pips — ghost-text package suggestions for `pip install`\n\
+        "pips — ghost-text package suggestions for pip / npm / pnpm / yarn\n\
          \n\
          usage:\n\
          \x20 pips install [-y] <partial> [pip args]  resolve & run `pip install`\n\
          \x20 pips best [-r pypi|npm] <partial>        top match (used by the shell hook)\n\
          \x20 pips list [-r pypi|npm] [-n N] <partial> top N matches\n\
-         \x20 pips update                              refresh the cached PyPI list\n\
+         \x20 pips update                              refresh the cached package lists\n\
          \x20 pips init zsh                            print the shell hook for ~/.zshrc\n\
          \n\
          setup:\n\
@@ -150,9 +154,11 @@ fn confirm(prompt: &str) -> Result<bool> {
 }
 
 fn cmd_update() -> Result<()> {
-    let path = cache_path()?;
-    build_pypi_cache(&path)?;
-    eprintln!("updated PyPI package list -> {}", path.display());
+    for registry in ["pypi", "npm"] {
+        let path = cache_path(registry)?;
+        build_cache(registry, &path)?;
+        eprintln!("updated {registry} list -> {}", path.display());
+    }
     Ok(())
 }
 
@@ -223,14 +229,8 @@ fn parse_query(args: &[String], default_limit: usize) -> Option<Query> {
 // ---- suggestion engine ----
 
 fn suggest(registry: &str, partial: &str, limit: usize) -> Result<Vec<String>> {
-    match registry {
-        "pypi" => {
-            let names = load_pypi_names(false)?;
-            Ok(rank(&names, partial, limit))
-        }
-        "npm" => npm_suggest(partial, limit),
-        other => Err(format!("unknown registry {other:?} (use pypi or npm)").into()),
-    }
+    let names = load_names(registry, false)?;
+    Ok(rank(&names, partial, limit))
 }
 
 /// Return up to `limit` names matching `query`: prefix matches first, then
@@ -252,15 +252,17 @@ fn rank(names: &[String], query: &str, limit: usize) -> Vec<String> {
     prefix
 }
 
-// ---- PyPI cache (flat file: one name per line, popularity order) ----
+// ---- cached ranked lists (flat file: one name per line, popularity order) ----
 
-fn load_pypi_names(refresh: bool) -> Result<Vec<String>> {
-    let path = cache_path()?;
+/// Load popularity-ranked names for a registry, (re)building the cache if
+/// missing, stale, or forced.
+fn load_names(registry: &str, refresh: bool) -> Result<Vec<String>> {
+    let path = cache_path(registry)?;
     if refresh || stale(&path) {
-        if let Err(e) = build_pypi_cache(&path) {
+        if let Err(e) = build_cache(registry, &path) {
             // Fall back to an existing (stale) cache rather than failing hard.
             if !path.exists() {
-                return Err(format!("fetching PyPI list: {e}").into());
+                return Err(format!("fetching {registry} list: {e}").into());
             }
         }
     }
@@ -268,26 +270,49 @@ fn load_pypi_names(refresh: bool) -> Result<Vec<String>> {
     Ok(data.lines().map(String::from).collect())
 }
 
-/// Download the popularity list and write it flattened (name-per-line) for
-/// fast keystroke-time lookups.
-fn build_pypi_cache(path: &PathBuf) -> Result<()> {
+/// Download a registry's ranked package list and write it flattened
+/// (name-per-line) for fast keystroke-time lookups.
+fn build_cache(registry: &str, path: &PathBuf) -> Result<()> {
+    let names = match registry {
+        "pypi" => fetch_pypi_names()?,
+        "npm" => fetch_npm_names()?,
+        other => return Err(format!("unknown registry {other:?} (use pypi or npm)").into()),
+    };
+    if let Some(dir) = path.parent() {
+        fs::create_dir_all(dir)?;
+    }
+    fs::write(path, names.join("\n"))?;
+    Ok(())
+}
+
+fn fetch_pypi_names() -> Result<Vec<String>> {
     let body = http_get(PYPI_TOP_URL)?;
     let json: serde_json::Value = serde_json::from_slice(&body)?;
     let rows = json["rows"]
         .as_array()
         .ok_or("unexpected PyPI list format")?;
-    let mut out = String::new();
-    for r in rows {
-        if let Some(name) = r["project"].as_str() {
-            out.push_str(name);
-            out.push('\n');
-        }
+    Ok(rows
+        .iter()
+        .filter_map(|r| r["project"].as_str().map(String::from))
+        .collect())
+}
+
+fn fetch_npm_names() -> Result<Vec<String>> {
+    // The file is a JS module: `export const topDownload = ['name', ...]`.
+    // Package names never contain a single quote, so every single-quoted token
+    // is a name (the tokens sit at odd indices between the quotes).
+    let body = http_get(NPM_TOP_URL)?;
+    let text = String::from_utf8_lossy(&body);
+    let names: Vec<String> = text
+        .split('\'')
+        .skip(1)
+        .step_by(2)
+        .map(String::from)
+        .collect();
+    if names.is_empty() {
+        return Err("could not parse npm list".into());
     }
-    if let Some(dir) = path.parent() {
-        fs::create_dir_all(dir)?;
-    }
-    fs::write(path, out)?;
-    Ok(())
+    Ok(names)
 }
 
 fn stale(path: &PathBuf) -> bool {
@@ -300,31 +325,11 @@ fn stale(path: &PathBuf) -> bool {
     }
 }
 
-fn cache_path() -> Result<PathBuf> {
+fn cache_path(registry: &str) -> Result<PathBuf> {
     let mut dir = dirs::cache_dir().ok_or("could not determine cache directory")?;
     dir.push("pips");
-    dir.push("pypi-names.txt");
+    dir.push(format!("{registry}-names.txt"));
     Ok(dir)
-}
-
-// ---- npm live search ----
-
-fn npm_suggest(query: &str, limit: usize) -> Result<Vec<String>> {
-    let url = format!(
-        "https://registry.npmjs.org/-/v1/search?text={}&size={}",
-        percent_encode(query),
-        limit
-    );
-    let body = http_get(&url)?;
-    let json: serde_json::Value = serde_json::from_slice(&body)?;
-    let objects = json["objects"]
-        .as_array()
-        .ok_or("unexpected npm response")?;
-    let names = objects
-        .iter()
-        .filter_map(|o| o["package"]["name"].as_str().map(String::from))
-        .collect();
-    Ok(names)
 }
 
 // ---- http ----
@@ -343,33 +348,25 @@ fn http_get(url: &str) -> Result<Vec<u8>> {
     Ok(buf)
 }
 
-/// Minimal percent-encoding for a query string (avoids pulling in a URL crate).
-fn percent_encode(s: &str) -> String {
-    let mut out = String::new();
-    for b in s.bytes() {
-        match b {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
-                out.push(b as char)
-            }
-            _ => out.push_str(&format!("%{b:02X}")),
-        }
-    }
-    out
-}
-
 // ---- shell hook ----
 
-const ZSH_HOOK: &str = r#"# pips — ghost-text suggestions for `pip install` (requires zsh-autosuggestions)
+const ZSH_HOOK: &str = r#"# pips — ghost-text package suggestions (requires zsh-autosuggestions)
 # https://github.com/suraj7974/cliTools
+# Fires on pip / npm / pnpm / yarn install lines.
 _zsh_autosuggest_strategy_pips() {
   emulate -L zsh
   typeset -g suggestion=""
-  local buf="$1"
-  # only for `pip|pip3|pips install <partial>` with a partial last word
-  [[ "$buf" == (pip|pip3|pips)" install "* ]] || return
+  local buf="$1" reg=""
+  case "$buf" in
+    ("pip install "*|"pip3 install "*|"pips install "*) reg="pypi" ;;
+    ("npm install "*|"npm i "*|"npm add "*)             reg="npm"  ;;
+    ("pnpm add "*|"pnpm install "*|"pnpm i "*)          reg="npm"  ;;
+    ("yarn add "*)                                      reg="npm"  ;;
+    (*) return ;;
+  esac
   local last="${buf##* }"
   [[ -n "$last" ]] || return
-  local best="$(command pips best -- "$last" 2>/dev/null)"
+  local best="$(command pips best -r "$reg" -- "$last" 2>/dev/null)"
   [[ -n "$best" && "$best" != "$last" ]] || return
   typeset -g suggestion="${buf%$last}$best"
 }

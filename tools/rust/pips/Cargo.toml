@@ -2,9 +2,9 @@
 # installed command is `pips` — same pattern as `fd-find` -> `fd`.
 [package]
 name = "pips-cli"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Ghost-text package suggestions for `pip install` in your shell."
+description = "Ghost-text package suggestions for pip / npm / pnpm / yarn in your shell."
 repository = "https://github.com/suraj7974/cliTools"
 homepage = "https://github.com/suraj7974/cliTools"
 license = "MIT"
