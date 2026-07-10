@@ -32,7 +32,7 @@ export function ToolsSubNav() {
               key={t.slug}
               href={`#${t.slug}`}
               aria-current={active === t.slug ? "true" : undefined}
-              className={`rounded-md px-3 py-1.5 font-mono text-[0.8125rem] transition-colors ${
+              className={`rounded-md px-3 py-1.5 font-mono text-[0.8125rem] ${
                 active === t.slug
                   ? "bg-[var(--accent-wash)] text-[var(--accent-ink)]"
                   : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
@@ -43,7 +43,7 @@ export function ToolsSubNav() {
           ))}
         </nav>
         <p className="hidden font-mono text-[0.75rem] text-[var(--ink-faint)] sm:block">
-          {tools.length} shipped · 8 on the way
+          {tools.length} shipped · more on the way
         </p>
       </div>
     </div>

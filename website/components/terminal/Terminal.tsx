@@ -54,9 +54,9 @@ export function Terminal({
     >
       <div className="term__bar" aria-hidden="true">
         <div className="term__dots">
-          <span className="term__dot term__dot--r" />
-          <span className="term__dot term__dot--y" />
-          <span className="term__dot term__dot--g" />
+          <span className="term__dot" />
+          <span className="term__dot" />
+          <span className="term__dot" />
         </div>
         {script.title ? (
           <span className="term__title">{script.title}</span>

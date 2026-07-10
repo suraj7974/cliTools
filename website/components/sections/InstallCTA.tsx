@@ -2,7 +2,7 @@
 
 import { Terminal } from "@/components/terminal/Terminal";
 import { CopyCommand } from "@/components/ui/CopyCommand";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { installCtaScript } from "@/data/tools";
 import { GITHUB_URL, TAP, TAP_URL } from "@/data/site";
@@ -29,10 +29,10 @@ export function InstallCTA() {
           </Reveal>
 
           <Reveal className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <MagneticButton href="/tools">Browse all tools →</MagneticButton>
-            <MagneticButton href={GITHUB_URL} variant="ghost" external>
+            <Button href="/tools">Browse all tools →</Button>
+            <Button href={GITHUB_URL} variant="ghost" external>
               GitHub ↗
-            </MagneticButton>
+            </Button>
           </Reveal>
 
           <Reveal className="mt-7">

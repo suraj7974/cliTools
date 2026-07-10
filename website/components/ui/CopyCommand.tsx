@@ -33,7 +33,7 @@ export function CopyCommand({
       className={`flex items-center justify-between gap-3 ${
         bare
           ? ""
-          : "rounded-[0.625rem] border border-[var(--line)] bg-[var(--term-bg)] py-2.5 pl-4 pr-2"
+          : "rounded-[0.625rem] border border-[var(--term-line)] bg-[var(--term-bg)] py-2.5 pl-4 pr-2"
       } ${className}`}
     >
       <code className="min-w-0 flex-1 truncate font-mono text-[0.8125rem] text-[var(--term-ink)]">
@@ -44,7 +44,7 @@ export function CopyCommand({
         type="button"
         onClick={copy}
         aria-live="polite"
-        className="relative shrink-0 rounded-md border border-[var(--line)] bg-[var(--paper)] px-2.5 py-1.5 font-mono text-[0.6875rem] text-[var(--ink-soft)] transition-colors hover:border-[var(--ink-faint)]"
+        className="relative shrink-0 rounded-md border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-2.5 py-1.5 font-mono text-[0.6875rem] text-[#a6adb8] hover:border-[rgba(255,255,255,0.32)]"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span

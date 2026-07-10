@@ -39,7 +39,7 @@ export function Nav() {
           <span className="chip hidden sm:inline-flex">Rust</span>
           <Link
             href="/tools"
-            className="text-[0.9375rem] font-medium text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)]"
+            className="text-[0.9375rem] font-medium text-[var(--ink-soft)] hover:text-[var(--ink)]"
           >
             Tools
           </Link>
@@ -47,7 +47,7 @@ export function Nav() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[0.9375rem] font-medium text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)]"
+            className="text-[0.9375rem] font-medium text-[var(--ink-soft)] hover:text-[var(--ink)]"
           >
             GitHub ↗
           </a>

@@ -354,22 +354,3 @@ export const tools: Tool[] = [
   },
 ];
 
-/* ------------------------------------------------------------------ */
-/* Coming soon — roadmap teasers (NOT installable)                     */
-/* ------------------------------------------------------------------ */
-
-export interface ComingSoonItem {
-  command: string;
-  description: string;
-}
-
-export const comingSoon: ComingSoonItem[] = [
-  { command: "dupefind ~/Downloads", description: "find duplicate files by hash" },
-  { command: "whereami", description: "a mini neofetch for your machine" },
-  { command: "envcheck", description: "diff .env against .env.example" },
-  { command: "qrmake wifi", description: "terminal QR codes + instant wifi share" },
-  { command: "bulkrename 'IMG_(\\d+)'", description: "regex rename with a safe --dry-run" },
-  { command: "waitfor localhost:5432", description: "block until a port or URL is up" },
-  { command: "todoscan .", description: "scan the tree for TODO / FIXME" },
-  { command: "gitundo", description: "friendly, guided git reflog undo" },
-];

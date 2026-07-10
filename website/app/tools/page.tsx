@@ -3,7 +3,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { ReviewBlock } from "@/components/sections/ReviewBlock";
 import { ToolsSubNav } from "@/components/sections/ToolsSubNav";
-import { ComingSoon } from "@/components/sections/ComingSoon";
+import { Craft } from "@/components/sections/Craft";
 import { InstallCTA } from "@/components/sections/InstallCTA";
 import { Scramble } from "@/components/ui/Scramble";
 import { tools } from "@/data/tools";
@@ -41,7 +41,7 @@ export default function ToolsPage() {
           <ReviewBlock key={tool.slug} tool={tool} flip={i % 2 === 1} />
         ))}
 
-        <ComingSoon />
+        <Craft />
         <InstallCTA />
       </main>
       <Footer />

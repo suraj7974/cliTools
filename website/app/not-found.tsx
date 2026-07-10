@@ -10,9 +10,9 @@ export default function NotFound() {
           <div className="term">
             <div className="term__bar" aria-hidden="true">
               <div className="term__dots">
-                <span className="term__dot term__dot--r" />
-                <span className="term__dot term__dot--y" />
-                <span className="term__dot term__dot--g" />
+                <span className="term__dot" />
+                <span className="term__dot" />
+                <span className="term__dot" />
               </div>
               <span className="term__title">zsh</span>
             </div>

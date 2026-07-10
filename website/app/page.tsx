@@ -4,7 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { Positioning } from "@/components/sections/Positioning";
 import { FeaturedPips } from "@/components/sections/FeaturedPips";
 import { ToolGrid } from "@/components/sections/ToolGrid";
-import { ComingSoon } from "@/components/sections/ComingSoon";
+import { Craft } from "@/components/sections/Craft";
 import { InstallCTA } from "@/components/sections/InstallCTA";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
         <Positioning />
         <FeaturedPips />
         <ToolGrid />
-        <ComingSoon />
+        <Craft />
         <InstallCTA />
       </main>
       <Footer />

@@ -70,20 +70,19 @@ export function FeaturedPips() {
                       type="button"
                       onClick={() => jumpTo(i)}
                       aria-pressed={i === scene}
-                      className={`w-full rounded-lg border-l-2 px-4 py-2.5 text-left transition-all duration-300 ${
+                      className={`w-full cursor-pointer rounded-lg px-4 py-2.5 text-left ${
                         active
-                          ? "border-[var(--accent)] bg-[var(--term-bg)]"
-                          : "border-[var(--line)] opacity-55 hover:opacity-80"
+                          ? "bg-[var(--surface)] shadow-[0_1px_2px_rgba(24,24,27,0.05)]"
+                          : "opacity-55"
                       }`}
                     >
                       <span className="block font-medium text-[var(--ink)]">
                         {step.title}
                       </span>
-                      {active ? (
-                        <span className="text-body mt-1 block text-[0.9375rem]">
-                          {step.body}
-                        </span>
-                      ) : null}
+                      {/* body always rendered — fixed box height, nothing below shifts */}
+                      <span className="text-body mt-1 block text-[0.9375rem]">
+                        {step.body}
+                      </span>
                     </button>
                   </li>
                 );

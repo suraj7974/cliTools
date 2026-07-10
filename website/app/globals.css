@@ -6,29 +6,34 @@
 }
 
 :root {
-  /* paper & ink — cool porcelain neutrals */
-  --paper: #fafafb;
-  --paper-2: #f3f4f6;
-  --ink: #111318;
-  --ink-soft: #4b5563;
-  --ink-faint: #8b919c;
-  --line: #e5e7eb;
+  /* Ink + Amber — warm off-white, near-black ink, neutral grays.
+     Amber is used ONLY for the CTA, the logo caret, and small highlights. */
+  --paper: #fafaf9;
+  --paper-2: #f4f4f5;
+  --ink: #18181b;
+  --ink-soft: #52525b;
+  --ink-faint: #71717a;
+  --line: #e4e4e7;
 
-  /* the one accent — vivid indigo */
-  --accent: #4f46e5;
-  --accent-ink: #4338ca;
-  --accent-wash: #eef2ff;
+  /* the one accent — amber/rust */
+  --accent: #d97706;
+  --accent-ink: #b45309;
+  --accent-wash: #fef3e2;
 
-  /* terminal palette */
-  --term-bg: #ffffff;
-  --term-titlebar: #f4f5f7;
-  --term-ink: #1f2328;
-  --term-comment: #9aa1ac;
-  --term-green: #1f883d;
-  --term-cyan: #0e7490;
-  --term-yellow: #9a6700;
+  /* light surfaces (cards, active states) stay white */
+  --surface: #ffffff;
 
-  --focus-ring: #4f46e5;
+  /* terminal palette — dark carbon windows on the light page */
+  --term-bg: #16181d;
+  --term-line: #2a2e36;
+  --term-ink: #e8eaed;
+  --term-comment: #6f7683;
+  --term-accent: #f59e0b; /* amber, brightened for dark */
+  --term-green: #3dd68c;
+  --term-cyan: #5cc8f7;
+  --term-yellow: #e5c07b;
+
+  --focus-ring: #d97706;
 
   /* motion */
   --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
@@ -147,18 +152,19 @@ body {
 
 .term {
   background: var(--term-bg);
-  border: 1px solid var(--line);
+  border: 1px solid var(--term-line);
   border-radius: 0.875rem;
   box-shadow:
-    0 1px 2px rgba(17, 19, 24, 0.04),
-    0 24px 60px -12px rgba(79, 70, 229, 0.12);
+    0 1px 2px rgba(24, 24, 27, 0.1),
+    0 12px 28px rgba(24, 24, 27, 0.14),
+    0 32px 64px -16px rgba(24, 24, 27, 0.22);
   overflow: hidden;
 }
 .term__bar {
   display: flex;
   align-items: center;
-  background: var(--term-titlebar);
-  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #22252b, #1a1d22);
+  border-bottom: 1px solid var(--term-line);
   padding: 0.625rem 0.875rem;
   position: relative;
 }
@@ -170,17 +176,15 @@ body {
   width: 0.65rem;
   height: 0.65rem;
   border-radius: 9999px;
+  background: #3a3e46; /* monochrome — quieter than candy dots */
 }
-.term__dot--r { background: #e3aba2; }
-.term__dot--y { background: #e6cf9f; }
-.term__dot--g { background: #abc9b2; }
 .term__title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--ink-faint);
+  color: #8b919c;
   user-select: none;
 }
 .term__body {
@@ -196,7 +200,7 @@ body {
 .term--lg .term__body { font-size: 1rem; padding: 1.5rem 1.75rem; }
 
 .term__prompt {
-  color: color-mix(in srgb, var(--accent-ink) 60%, var(--term-comment));
+  color: color-mix(in srgb, var(--term-accent) 65%, var(--term-comment));
   user-select: none;
 }
 
@@ -213,7 +217,7 @@ body {
   transition: color 160ms var(--ease-settle);
 }
 .term-ghost[data-flash="true"] {
-  color: var(--accent-ink);
+  color: var(--term-accent);
 }
 
 /* caret */
@@ -222,7 +226,7 @@ body {
   width: 0.55em;
   height: 1.05em;
   margin-left: 1px;
-  background: color-mix(in srgb, var(--accent) 85%, transparent);
+  background: color-mix(in srgb, var(--term-accent) 92%, transparent);
   vertical-align: -0.15em;
   border-radius: 1px;
 }
@@ -282,12 +286,42 @@ body {
 
 /* card */
 .card {
-  background: var(--term-bg);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 1rem;
   box-shadow:
-    0 1px 2px rgba(17, 19, 24, 0.04),
-    0 8px 24px rgba(17, 19, 24, 0.06);
+    0 1px 1px rgba(24, 24, 27, 0.03),
+    0 4px 12px rgba(24, 24, 27, 0.04),
+    0 16px 32px -8px rgba(24, 24, 27, 0.06);
+}
+
+/* buttons — instant states, no hover transitions */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.btn-primary {
+  color: #fff;
+  background: var(--accent);
+  box-shadow:
+    0 1px 2px rgba(24, 24, 27, 0.12),
+    0 8px 20px -6px rgba(217, 119, 6, 0.35);
+}
+.btn-primary:hover {
+  filter: brightness(1.07);
+}
+.btn-ghost {
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--ink);
+}
+.btn-ghost:hover {
+  border-color: var(--ink-faint);
 }
 
 /* link underline in accent */
@@ -297,7 +331,6 @@ body {
   text-decoration-color: var(--accent);
   text-underline-offset: 4px;
   text-decoration-thickness: 1.5px;
-  transition: color 160ms var(--ease-settle);
 }
 .link-accent:hover { color: var(--accent-ink); }
 

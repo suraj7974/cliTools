@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Terminal } from "@/components/terminal/Terminal";
 import { CopyCommand } from "@/components/ui/CopyCommand";
 import { Reveal } from "@/components/ui/Reveal";
@@ -18,13 +17,7 @@ export function ToolGrid() {
 
         <Reveal stagger className="mt-12 grid gap-6 md:grid-cols-2">
           {tools.map((tool) => (
-            <motion.article
-              key={tool.slug}
-              className="card group p-6 sm:p-7"
-              whileHover={{ y: -4, rotateX: 1.5, rotateY: -1.5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 26 }}
-              style={{ transformPerspective: 900 }}
-            >
+            <article key={tool.slug} className="card p-6 sm:p-7">
               <div className="flex flex-wrap items-center gap-2.5">
                 <h3 className="font-mono text-xl font-semibold text-[var(--ink)]">
                   {tool.name}
@@ -58,7 +51,7 @@ export function ToolGrid() {
                   Review →
                 </Link>
               </p>
-            </motion.article>
+            </article>
           ))}
         </Reveal>
       </div>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Terminal } from "@/components/terminal/Terminal";
 import { Scramble } from "@/components/ui/Scramble";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
 import { heroScript } from "@/data/tools";
 import { GITHUB_URL } from "@/data/site";
 
@@ -37,10 +37,10 @@ export function Hero() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[55%] h-[32rem] w-[46rem] -translate-x-1/2 rounded-full opacity-[0.07]"
+        className="pointer-events-none absolute left-1/2 top-[50%] h-[36rem] w-[52rem] -translate-x-1/2"
         style={{
           background:
-            "radial-gradient(ellipse at center, var(--accent), transparent 65%)",
+            "radial-gradient(ellipse 55% 50% at 50% 50%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 70%)",
         }}
       />
 
@@ -80,10 +80,10 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7, ease: settle }}
           >
-            <MagneticButton href="/tools">Explore the tools →</MagneticButton>
-            <MagneticButton href={GITHUB_URL} variant="ghost" external>
+            <Button href="/tools">Explore the tools →</Button>
+            <Button href={GITHUB_URL} variant="ghost" external>
               View on GitHub
-            </MagneticButton>
+            </Button>
           </motion.div>
 
           <motion.div

@@ -30,7 +30,7 @@ export function InstallTabs({ options, note, idPrefix }: InstallTabsProps) {
             aria-selected={i === active}
             aria-controls={`${idPrefix}-panel-${i}`}
             onClick={() => setActive(i)}
-            className={`relative px-4 py-2.5 font-mono text-[0.8125rem] transition-colors ${
+            className={`relative px-4 py-2.5 font-mono text-[0.8125rem] ${
               i === active
                 ? "text-[var(--ink)]"
                 : "text-[var(--ink-faint)] hover:text-[var(--ink-soft)]"
