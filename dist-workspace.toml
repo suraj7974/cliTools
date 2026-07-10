@@ -7,7 +7,9 @@ members = ["cargo:tools/rust"]   # the nested Cargo workspace holding the Rust t
 [dist]
 cargo-dist-version = "0.32.0"
 ci = ["github"]
-installers = ["shell"]
+installers = ["shell", "homebrew"]
+tap = "suraj7974/homebrew-tap"
+publish-jobs = ["homebrew"]
 targets = [
     "aarch64-apple-darwin",
     "x86_64-apple-darwin",

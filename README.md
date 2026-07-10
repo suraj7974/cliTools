@@ -25,7 +25,7 @@ cliTools/
 ├── tools/
 │   ├── go/          # Go tools   — one module per tool (go.work workspace)
 │   └── rust/        # Rust tools — one crate per tool (Cargo workspace)
-└── website/         # docs site (coming soon)
+└── website/         # docs
 ```
 
 Why a monorepo? These are many small, related tools — keeping them together means

@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Find the biggest files under a path."
 repository = "https://github.com/suraj7974/cliTools"
+homepage = "https://github.com/suraj7974/cliTools"
 license = "MIT"
 
 [dependencies]
