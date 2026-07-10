@@ -1,0 +1,48 @@
+# GoReleaser — builds & publishes the Go CLI tools in this monorepo.
+# Docs: https://goreleaser.com   Validate: goreleaser check   Release: goreleaser release --clean
+#
+# ⚠️ TEMPLATE: there are no Go tools yet. When you create your first one
+# (e.g. `tools/go/envcheck`), it's already wired below — just add the module to
+# tools/go/go.work, then run `goreleaser check` to validate.
+version: 2
+
+project_name: cli-tools
+
+before:
+  hooks:
+    - sh -c "cd tools/go && go work sync"
+
+builds:
+  - id: envcheck
+    dir: tools/go/envcheck # path to this tool's Go module
+    main: .
+    binary: envcheck
+    env:
+      - CGO_ENABLED=0
+      - GOWORK=off # build the module standalone, ignore the workspace
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+  # Add one build block per Go tool you want to release, e.g.:
+  # - id: quietport
+  #   dir: tools/go/quietport
+  #   main: .
+  #   binary: quietport
+  #   env: [CGO_ENABLED=0, GOWORK=off]
+  #   goos: [linux, darwin, windows]
+  #   goarch: [amd64, arm64]
+
+archives:
+  - id: tools
+    formats: [tar.gz]
+    name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: suraj7974
+    name: cli-tools
