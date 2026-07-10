@@ -12,6 +12,14 @@ $ pip install num‸numpy       ← "numpy" is ghost text; → to fill, Enter to
 Requires [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions)
 (the plugin that renders the ghost text — ships with oh-my-zsh).
 
+Install (the crate is `pips-cli`; the command is `pips`):
+
+```bash
+brew install suraj7974/tap/pips-cli   # or: cargo install pips-cli
+```
+
+Then enable the shell hook:
+
 ```bash
 pips update                    # download the package list (once)
 pips init zsh >> ~/.zshrc      # install the shell hook
@@ -24,6 +32,7 @@ Now type `pip install num` in any prompt and `numpy` appears as ghost text.
 
 | Command | What it does |
 |---------|--------------|
+| `pips install [-y] <partial>` | Resolve the partial to the top package and run `pip install` (confirms first; `-y` skips) |
 | `pips best <partial>` | Print the single top match (used by the shell hook) |
 | `pips list [-n N] <partial>` | Print the top N matches |
 | `pips list -r npm <partial>` | Live npm search (manual use) |

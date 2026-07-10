@@ -1,11 +1,17 @@
+# Crate published as `pips-cli` (the name `pips` was taken on crates.io), but the
+# installed command is `pips` — same pattern as `fd-find` -> `fd`.
 [package]
-name = "pips"
+name = "pips-cli"
 version = "0.1.0"
 edition = "2021"
 description = "Ghost-text package suggestions for `pip install` in your shell."
 repository = "https://github.com/suraj7974/cliTools"
 homepage = "https://github.com/suraj7974/cliTools"
 license = "MIT"
+
+[[bin]]
+name = "pips"
+path = "src/main.rs"
 
 [dependencies]
 ureq = "2"          # small blocking HTTP client (pure-Rust TLS, cross-compiles cleanly)

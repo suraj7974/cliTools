@@ -35,6 +35,7 @@ fn main() {
     let res = match cmd {
         "best" => cmd_best(&args[1..]),
         "list" => cmd_list(&args[1..]),
+        "install" => cmd_install(&args[1..]),
         "update" => cmd_update(),
         "init" => cmd_init(&args[1..]),
         "" | "-h" | "--help" | "help" => {
@@ -58,6 +59,7 @@ fn usage() {
         "pips — ghost-text package suggestions for `pip install`\n\
          \n\
          usage:\n\
+         \x20 pips install [-y] <partial> [pip args]  resolve & run `pip install`\n\
          \x20 pips best [-r pypi|npm] <partial>        top match (used by the shell hook)\n\
          \x20 pips list [-r pypi|npm] [-n N] <partial> top N matches\n\
          \x20 pips update                              refresh the cached PyPI list\n\
@@ -87,6 +89,64 @@ fn cmd_list(args: &[String]) -> Result<()> {
         println!("{n}");
     }
     Ok(())
+}
+
+/// Resolve a partial to the most-popular matching package, then run
+/// `pip install <resolved> [extra pip args]`. Confirms first unless `-y`.
+fn cmd_install(args: &[String]) -> Result<()> {
+    let (yes, rest) = match args.first().map(String::as_str) {
+        Some("-y") | Some("--yes") => (true, &args[1..]),
+        _ => (false, args),
+    };
+    let partial = rest
+        .first()
+        .ok_or("usage: pips install [-y] <partial> [pip args]")?;
+    let extra = &rest[1..];
+
+    let target = match suggest("pypi", partial, 1)?.into_iter().next() {
+        // A more-popular package matched the partial — confirm before using it.
+        Some(best) if &best != partial => {
+            if !yes && !confirm(&format!("Install '{best}' (matched from '{partial}')?"))? {
+                eprintln!("aborted");
+                return Ok(());
+            }
+            best
+        }
+        // Exact/known name, or no suggestion — install exactly what was typed.
+        _ => partial.clone(),
+    };
+
+    eprintln!("+ pip install {target}");
+    run_pip_install(&target, extra)
+}
+
+/// Run `pip install`, trying common pip invocations so it works whether the
+/// system has `pip`, only `pip3`, or just `python3 -m pip`.
+fn run_pip_install(pkg: &str, extra: &[String]) -> Result<()> {
+    let candidates: [&[&str]; 3] = [&["pip"], &["pip3"], &["python3", "-m", "pip"]];
+    for c in candidates {
+        let mut cmd = std::process::Command::new(c[0]);
+        cmd.args(&c[1..]).arg("install").arg(pkg).args(extra);
+        match cmd.status() {
+            Ok(status) if status.success() => return Ok(()),
+            Ok(status) => std::process::exit(status.code().unwrap_or(1)),
+            // this pip flavor isn't installed — try the next
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(e) => return Err(format!("failed to run {}: {e}", c[0]).into()),
+        }
+    }
+    Err("could not find pip (tried pip, pip3, python3 -m pip)".into())
+}
+
+/// Prompt on stderr; treat empty / y / yes as yes.
+fn confirm(prompt: &str) -> Result<bool> {
+    use std::io::Write;
+    eprint!("{prompt} [Y/n] ");
+    std::io::stderr().flush().ok();
+    let mut line = String::new();
+    std::io::stdin().read_line(&mut line)?;
+    let a = line.trim().to_lowercase();
+    Ok(a.is_empty() || a == "y" || a == "yes")
 }
 
 fn cmd_update() -> Result<()> {
@@ -305,8 +365,8 @@ _zsh_autosuggest_strategy_pips() {
   emulate -L zsh
   typeset -g suggestion=""
   local buf="$1"
-  # only for `pip install <partial>` / `pip3 install <partial>` with a partial last word
-  [[ "$buf" == (pip|pip3)" install "* ]] || return
+  # only for `pip|pip3|pips install <partial>` with a partial last word
+  [[ "$buf" == (pip|pip3|pips)" install "* ]] || return
   local last="${buf##* }"
   [[ -n "$last" ]] || return
   local best="$(command pips best -- "$last" 2>/dev/null)"

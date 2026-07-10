@@ -64,16 +64,19 @@ $ pip install num‸numpy      ← "numpy" is ghost text
 
 ### 1. Install `pips` (pick one)
 
+> The package is named `pips-cli` (the name `pips` was taken on crates.io), but
+> every method installs the command as **`pips`** — same as `fd-find` → `fd`.
+
 ```bash
 # Homebrew (recommended)
-brew install suraj7974/tap/pips
+brew install suraj7974/tap/pips-cli
+
+# crates.io (needs Rust)
+cargo install pips-cli
 
 # install script (macOS/Linux)
 curl --proto '=https' --tlsv1.2 -LsSf \
-  https://github.com/suraj7974/cliTools/releases/latest/download/pips-installer.sh | sh
-
-# from source (needs Rust)
-cargo install --git https://github.com/suraj7974/cliTools pips
+  https://github.com/suraj7974/cliTools/releases/latest/download/pips-cli-installer.sh | sh
 ```
 
 ### 2. Install `zsh-autosuggestions` (if you don't have it)
@@ -104,6 +107,14 @@ exec zsh                        # reload your shell
 ```
 
 Now type `pip install num` in any prompt — `numpy` appears as ghost text.
+
+**Or skip the ghost text and let `pips` install directly** — it resolves the
+partial to the top package and runs `pip install` for you (confirms first):
+
+```bash
+pips install num      # "Install 'numpy' (matched from 'num')? [Y/n]" -> pip install numpy
+pips install -y flask # skip the prompt
+```
 
 ### Don't use zsh / don't want the plugin?
 
