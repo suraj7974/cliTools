@@ -1,66 +1,58 @@
-# cliTools
+<h1 align="center">cliTools</h1>
 
-A monorepo of small, useful command-line tools — built to learn how real CLIs
-(like `gh` and `npm`) are made: argument parsing, OS detection, subprocess
-handling, config files, packaging, and distribution.
+<p align="center">
+  A growing collection of small, fast, single-purpose command-line tools.<br>
+  Built in <strong>Go</strong> and <strong>Rust</strong> — each does one useful thing well.
+</p>
 
-Primary languages: **Go** (default) and **Rust** (for file/perf-heavy tools).
-A **website** documenting every tool lives in `website/`.
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+</p>
 
-> Progress tracker: [`PROGRESS.md`](PROGRESS.md). Idea backlog: [`docs/`](docs/).
+---
 
-## How this monorepo works
+This is a monorepo: one repository, many independent tools. Each tool is small,
+focused, and ships its own binary — install only the one you need, with no shared
+runtime or dependencies between them.
 
-This is **one git repository**. Every folder below is just a directory — *not*
-its own repo. You clone once, you `git push` once, and a single commit can touch
-a Go tool, a Rust tool, and the website together.
+> 🚧 Early days — the first tools are being built. Detailed install and usage docs
+> will land here as the collection grows.
 
-- "Independently publishable" means each tool's **binary** can be released on its
-  own (`go install .../<tool>`, `cargo install`) — it does **not** mean a
-  separate git repo. Source stays here.
-- The opposite model (one repo per tool) is "polyrepo" — deliberately not used
-  here, since these are many small, related tools.
-
-## Layout
+## Repository layout
 
 ```
 cliTools/
-├── Justfile              # one command to build/run/install any tool
 ├── tools/
-│   ├── go/               # Go workspace (go.work) — one module per tool
-│   │   └── envcheck/     # (planned) diff .env vs .env.example
-│   └── rust/             # Cargo workspace — one crate per tool
-│       └── sizehog/      # find the biggest files under a path
-├── website/              # explainer site (add later)
-└── docs/                 # per-tool markdown the website can read
+│   ├── go/          # Go tools   — one module per tool (go.work workspace)
+│   └── rust/        # Rust tools — one crate per tool (Cargo workspace)
+└── website/         # docs site (coming soon)
 ```
 
-## Prerequisites
+Why a monorepo? These are many small, related tools — keeping them together means
+one clone, one issue tracker, and shared tooling, while each tool still releases
+its own binary independently.
 
-- [Go](https://go.dev/dl/) 1.22+
-- [Rust](https://rustup.rs/) (stable)
-- [`just`](https://github.com/casey/just) — the task runner (`brew install just`)
+## Building from source
 
-## Quick start
+Uses [`just`](https://github.com/casey/just) as the task runner. Prerequisites:
+[Go](https://go.dev/dl/) 1.22+, [Rust](https://rustup.rs), and `just`
+(`brew install just`).
 
 ```bash
-just                       # list all recipes
-just rust-run sizehog .    # run the Rust tool on the current dir
-just build-all             # build everything
+just                # list all recipes
+just build-all      # build every tool
 ```
 
-## Adding a new tool
+## Contributing
 
-**Go:** `mkdir tools/go/<name>`, add `main.go` + `go.mod`, then add the folder to
-`tools/go/go.work` (`use ./<name>`).
+New tools and improvements are welcome. Keep each tool small and focused —
+one job, done well.
 
-**Rust:** `cd tools/rust && cargo new <name>`, then add `<name>` to the `members`
-list in `tools/rust/Cargo.toml`.
+- **Add a Rust tool:** `cd tools/rust && cargo new <name>`, then add it to
+  `members` in `tools/rust/Cargo.toml`.
+- **Add a Go tool:** `mkdir tools/go/<name>`, add `main.go` + `go.mod`, then
+  `use ./<name>` in `tools/go/go.work`.
 
-## Git workflow (one repo, one push)
+## License
 
-```bash
-git add .
-git commit -m "add <thing>"
-git push            # pushes the whole monorepo
-```
+[MIT](LICENSE) © Suraj Patel
