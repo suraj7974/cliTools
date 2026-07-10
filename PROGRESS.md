@@ -6,7 +6,7 @@ Idea backlog: [`docs/Feasible CLI Tools.md`](docs/Feasible%20CLI%20Tools.md) ·
 
 **Legend:** ✅ Done · 🚧 In Progress · ⬜ Planned · 💤 Backlog (not scheduled)
 
-**Count:** 2 done · 0 in progress · 22 planned
+**Count:** 1 done · 0 in progress · 22 planned
 
 ---
 
@@ -30,7 +30,6 @@ Lang is a *suggestion* (Go = system/logic/network, Rust = file/perf-heavy). Chan
 ### System utilities
 | Tool | Lang | Status | Notes |
 |------|------|--------|-------|
-| `killport` | Go | ✅ | Kill process on a port |
 | `quietport` | Go | ⬜ | Which usual ports are free |
 | `whereami` | Go | ⬜ | Mini `neofetch` |
 | `pathcheck` | Go | ⬜ | Audit `$PATH` |

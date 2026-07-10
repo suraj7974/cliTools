@@ -16,7 +16,7 @@ its own repo. You clone once, you `git push` once, and a single commit can touch
 a Go tool, a Rust tool, and the website together.
 
 - "Independently publishable" means each tool's **binary** can be released on its
-  own (`go install .../killport`, `cargo install`) — it does **not** mean a
+  own (`go install .../<tool>`, `cargo install`) — it does **not** mean a
   separate git repo. Source stays here.
 - The opposite model (one repo per tool) is "polyrepo" — deliberately not used
   here, since these are many small, related tools.
@@ -28,7 +28,7 @@ cliTools/
 ├── Justfile              # one command to build/run/install any tool
 ├── tools/
 │   ├── go/               # Go workspace (go.work) — one module per tool
-│   │   └── killport/     # kill whatever process holds a port
+│   │   └── envcheck/     # (planned) diff .env vs .env.example
 │   └── rust/             # Cargo workspace — one crate per tool
 │       └── sizehog/      # find the biggest files under a path
 ├── website/              # explainer site (add later)
@@ -45,7 +45,6 @@ cliTools/
 
 ```bash
 just                       # list all recipes
-just go-run killport 3000  # run the Go tool
 just rust-run sizehog .    # run the Rust tool on the current dir
 just build-all             # build everything
 ```
