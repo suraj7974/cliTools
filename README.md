@@ -54,12 +54,17 @@ sizehog ~/Downloads  # ...under any path
 
 ## pips
 
-As you type `pip install num`, your shell shows the most-popular matching
-package (`numpy`) as dim **ghost text** — press <kbd>→</kbd> to accept,
-<kbd>Enter</kbd> to run. No separate command, no interruption.
+`pips` gets you the right package name two ways:
+
+- **Ghost text** — as you type `pip install num`, your shell shows the
+  most-popular match (`numpy`) as dim text; press <kbd>→</kbd> to accept,
+  <kbd>Enter</kbd> to run. *(needs the zsh-autosuggestions plugin — step 2)*
+- **Direct** — run `pips install num` and it resolves to the top package and runs
+  `pip install` for you, asking first. *(works in any shell, no plugin needed)*
 
 ```
-$ pip install num‸numpy      ← "numpy" is ghost text
+$ pip install num‸numpy      ← ghost text; → to accept
+$ pips install num           → "Install 'numpy'? [Y/n]" → pip install numpy
 ```
 
 ### 1. Install `pips` (pick one)
