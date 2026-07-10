@@ -45,4 +45,4 @@ checksum:
 release:
   github:
     owner: suraj7974
-    name: cli-tools
+    name: cliTools
