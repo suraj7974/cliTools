@@ -1,0 +1,18 @@
+# Root dist workspace — tells `dist` where the real projects live in this monorepo.
+# CI runs from the repo root, so this file must be here (not down in tools/rust).
+[workspace]
+members = ["cargo:tools/rust"]   # the nested Cargo workspace holding the Rust tools
+
+# Config for 'dist'
+[dist]
+cargo-dist-version = "0.32.0"
+ci = ["github"]
+installers = ["shell"]
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc",
+]
+install-path = "CARGO_HOME"
+install-updater = false
