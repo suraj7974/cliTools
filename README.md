@@ -18,14 +18,12 @@ runtime or dependencies between them.
 
 ## Tools
 
-| Tool | Lang | What it does |
-|------|:----:|--------------|
-| [`sizehog`](tools/rust/sizehog) | 🦀 Rust | Find the biggest files under a directory |
-| [`pips`](tools/rust/pips) | 🦀 Rust | Ghost-text suggestions for `pip install` as you type |
+Click a tool to expand its guide.
 
----
+<details>
+<summary><b>🦀 sizehog</b> — find the biggest files under a directory</summary>
 
-## sizehog
+<br>
 
 Find the biggest files under any directory, sorted, human-readable.
 
@@ -39,7 +37,7 @@ brew install suraj7974/tap/sizehog
 curl --proto '=https' --tlsv1.2 -LsSf \
   https://github.com/suraj7974/cliTools/releases/latest/download/sizehog-installer.sh | sh
 
-# from crates.io (needs Rust)
+# crates.io (needs Rust)
 cargo install sizehog
 ```
 
@@ -50,9 +48,14 @@ sizehog .            # biggest files under the current directory
 sizehog ~/Downloads  # ...under any path
 ```
 
----
+More: [`tools/rust/sizehog`](tools/rust/sizehog)
 
-## pips
+</details>
+
+<details>
+<summary><b>🦀 pips</b> — ghost-text suggestions for <code>pip install</code> as you type</summary>
+
+<br>
 
 `pips` gets you the right package name two ways:
 
@@ -67,7 +70,7 @@ $ pip install num‸numpy      ← ghost text; → to accept
 $ pips install num           → "Install 'numpy'? [Y/n]" → pip install numpy
 ```
 
-### 1. Install `pips` (pick one)
+### 1. Install `pips`
 
 > The package is named `pips-cli` (the name `pips` was taken on crates.io), but
 > every method installs the command as **`pips`** — same as `fd-find` → `fd`.
@@ -84,20 +87,18 @@ curl --proto '=https' --tlsv1.2 -LsSf \
   https://github.com/suraj7974/cliTools/releases/latest/download/pips-cli-installer.sh | sh
 ```
 
-### 2. Install `zsh-autosuggestions` (if you don't have it)
+### 2. Install `zsh-autosuggestions` (only for the ghost text)
 
 `pips` renders its ghost text through the popular
-[`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) plugin
-(the same one that ghosts your shell history). If you already have it, skip ahead.
+[`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) plugin.
+If you already have it, skip ahead.
 
-**With Homebrew:**
 ```bash
+# Homebrew
 brew install zsh-autosuggestions
 echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
-```
 
-**With oh-my-zsh:**
-```bash
+# or oh-my-zsh
 git clone https://github.com/zsh-users/zsh-autosuggestions \
   ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 # then add zsh-autosuggestions to the plugins=(...) line in ~/.zshrc
@@ -111,19 +112,18 @@ pips init zsh >> ~/.zshrc       # add the shell hook
 exec zsh                        # reload your shell
 ```
 
-Now type `pip install num` in any prompt — `numpy` appears as ghost text.
+Now `pip install num` shows `numpy` as ghost text, or run `pips install num`
+directly.
 
-**Or skip the ghost text and let `pips` install directly** — it resolves the
-partial to the top package and runs `pip install` for you (confirms first):
+### Windows
 
-```bash
-pips install num      # "Install 'numpy' (matched from 'num')? [Y/n]" -> pip install numpy
-pips install -y flask # skip the prompt
-```
+The `pips install num` command works in PowerShell/CMD (install via the
+`pips-cli-installer.ps1` script or `cargo install pips-cli`). The inline **ghost
+text needs zsh**, so for that experience use **WSL** with zsh-autosuggestions.
 
-### Don't use zsh / don't want the plugin?
+### No zsh / no plugin?
 
-`pips` still works as a plain lookup command:
+`pips` still works as a plain lookup command anywhere:
 
 ```bash
 pips list num          # numpy, numba, numexpr, ...
@@ -131,8 +131,9 @@ pips list -n 5 requ    # top 5
 pips list -r npm expr  # live npm search
 ```
 
-Without `zsh-autosuggestions` the shell hook simply does nothing — no errors, no
-slowdown, your shell behaves normally; you just won't see the inline ghost text.
+More: [`tools/rust/pips`](tools/rust/pips)
+
+</details>
 
 ---
 
@@ -145,9 +146,12 @@ cliTools/
 │   └── rust/        # Rust tools — one crate per tool (Cargo workspace)
 │       ├── sizehog/
 │       └── pips/
-└── website/        
+└── website/         # docs site (coming soon)
 ```
 
+Why a monorepo? These are many small, related tools — keeping them together means
+one clone, one issue tracker, and shared tooling, while each tool still releases
+its own binary independently.
 
 ## Building from source
 
