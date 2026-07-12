@@ -187,6 +187,80 @@ export const sizehogScenes: TerminalScript[] = [
   },
 ];
 
+/**
+ * upwait deep-dive: three standalone scenes, real-time playback.
+ */
+export const upwaitScenes: TerminalScript[] = [
+  {
+    id: "upwait-scene-chain",
+    title: "— upwait —",
+    steps: [
+      { kind: "prompt" },
+      { kind: "pause", ms: 350 },
+      { kind: "type", text: "upwait localhost:5432 && npm start" },
+      { kind: "submit" },
+      {
+        kind: "print",
+        lines: [line("waiting for localhost:5432 (timeout 30s)…", "comment")],
+      },
+      { kind: "pause", ms: 1200 },
+      {
+        kind: "print",
+        lines: [
+          line("✓ localhost:5432 is up after 2.3s", "green"),
+          line("> app ready on http://localhost:3000"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "upwait-scene-url",
+    title: "— upwait —",
+    steps: [
+      { kind: "prompt" },
+      { kind: "pause", ms: 350 },
+      { kind: "type", text: "upwait https://api.example.com -t 60" },
+      { kind: "submit" },
+      {
+        kind: "print",
+        lines: [
+          line("waiting for https://api.example.com (timeout 60s)…", "comment"),
+        ],
+      },
+      { kind: "pause", ms: 1200 },
+      {
+        kind: "print",
+        lines: [line("✓ https://api.example.com is up after 8.4s", "green")],
+      },
+    ],
+  },
+  {
+    id: "upwait-scene-timeout",
+    title: "— upwait —",
+    steps: [
+      { kind: "prompt" },
+      { kind: "pause", ms: 350 },
+      {
+        kind: "type",
+        text: "upwait localhost:6379 -t 5 || echo 'redis never came up'",
+      },
+      { kind: "submit" },
+      {
+        kind: "print",
+        lines: [line("waiting for localhost:6379 (timeout 5s)…", "comment")],
+      },
+      { kind: "pause", ms: 1200 },
+      {
+        kind: "print",
+        lines: [
+          line("✗ timed out after 5s waiting for localhost:6379", "yellow"),
+          line("redis never came up"),
+        ],
+      },
+    ],
+  },
+];
+
 /** Card thumbnails — short, replayable. */
 export const pipsCardScript: TerminalScript = {
   id: "pips-card",
@@ -198,6 +272,38 @@ export const pipsCardScript: TerminalScript = {
     { kind: "pause", ms: 650 },
     { kind: "accept" },
     { kind: "pause", ms: 1600 },
+    { kind: "clear" },
+  ],
+};
+
+export const upwaitCardScript: TerminalScript = {
+  id: "upwait-card",
+  loop: true,
+  steps: [
+    { kind: "prompt" },
+    { kind: "type", text: "docker start postgres" },
+    { kind: "submit" },
+    {
+      kind: "print",
+      lines: [line("postgres  # container up — db still booting", "comment")],
+    },
+    { kind: "pause", ms: 500 },
+    { kind: "prompt" },
+    { kind: "type", text: "upwait localhost:5432 && npm start" },
+    { kind: "submit" },
+    {
+      kind: "print",
+      lines: [line("waiting for localhost:5432…", "comment")],
+    },
+    { kind: "pause", ms: 1300 },
+    {
+      kind: "print",
+      lines: [
+        line("✓ localhost:5432 is up after 2.3s", "green"),
+        line("> connected to postgres — first try"),
+      ],
+    },
+    { kind: "pause", ms: 2400 },
     { kind: "clear" },
   ],
 };
@@ -324,6 +430,35 @@ export const tools: Tool[] = [
       {
         title: "Every manager",
         body: "npm ranks by raw downloads — so rea suggests readable-stream, and one more keystroke narrows reac to react-is.",
+      },
+    ],
+  },
+  {
+    slug: "upwait",
+    name: "upwait",
+    version: "0.1.0",
+    lang: "Rust",
+    tagline: "Block until a port or URL is up.",
+    verdict: "sleep waits for a guess; upwait waits for the truth.",
+    install: [
+      { label: "brew", command: "brew install suraj7974/tap/upwait" },
+      { label: "cargo", command: "cargo install upwait" },
+    ],
+    sourceUrl: `${GITHUB_URL}/tree/main/tools/rust/upwait`,
+    scenes: upwaitScenes,
+    cardScript: upwaitCardScript,
+    howItWorks: [
+      {
+        title: "The && bridge",
+        body: "Servers exiting isn't servers being ready. upwait exits 0 the moment the target actually answers — so the next command in your chain runs at exactly the right time.",
+      },
+      {
+        title: "Ports and URLs",
+        body: "Checks a TCP host:port, or GETs an http(s) URL — any response below 500 counts as up. Unresolvable DNS just means \"not up yet\", so containers registering late are fine.",
+      },
+      {
+        title: "Fails loudly",
+        body: "If the target never comes up, upwait exits 1 after the timeout — your startup chain stops instead of launching an app that's doomed to crash.",
       },
     ],
   },
