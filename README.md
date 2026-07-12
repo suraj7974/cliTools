@@ -105,6 +105,47 @@ More: [`tools/rust/pips`](tools/rust/pips)
 </details>
 
 <details>
+<summary><b>🦀 upwait</b> — block until a port or URL is up</summary>
+
+<br>
+
+The missing glue for startup scripts, Docker entrypoints, and CI. `sleep` waits
+for a guess; `upwait` waits for the truth — it polls the target and exits `0`
+the moment it actually answers, so `&&` chains run at exactly the right time.
+
+```bash
+docker start postgres
+upwait localhost:5432 && npm start        # app connects on the first try
+
+upwait https://api.example.com -t 60      # wait for an endpoint, up to 60s
+upwait db:5432 -q || echo "db never came up"
+```
+
+**Install** (pick one):
+
+```bash
+# Homebrew
+brew install suraj7974/tap/upwait
+
+# install script (macOS/Linux) — no toolchain needed
+curl --proto '=https' --tlsv1.2 -LsSf \
+  https://github.com/suraj7974/cliTools/releases/latest/download/upwait-installer.sh | sh
+
+# crates.io (needs Rust)
+cargo install upwait
+```
+
+**Flags:** `-t/--timeout <secs>` (default 30) · `-i/--interval <ms>` (default 250) ·
+`-q/--quiet`. Exit codes: `0` up · `1` timeout.
+
+Works with `host:port` (TCP) or `http(s)://` URLs — any response below 500
+counts as up, `5xx` keeps waiting while the app boots.
+
+More: [`tools/rust/upwait`](tools/rust/upwait)
+
+</details>
+
+<details>
 <summary><b>🦀 sizehog</b> — find the biggest files under a directory</summary>
 
 <br>
@@ -146,6 +187,7 @@ cliTools/
 │   ├── go/          # Go tools   — one module per tool (go.work workspace)
 │   └── rust/        # Rust tools — one crate per tool (Cargo workspace)
 │       ├── pips/
+│       ├── upwait/
 │       └── sizehog/
 └── website/         # docs site (coming soon)
 ```
