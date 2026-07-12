@@ -1,0 +1,11 @@
+[package]
+name = "upwait"
+version = "0.1.0"
+edition = "2021"
+description = "Block until a port or URL is up — the missing glue for startup scripts."
+repository = "https://github.com/suraj7974/cliTools"
+homepage = "https://github.com/suraj7974/cliTools"
+license = "MIT"
+
+[dependencies]
+ureq = "2"    # http(s) checks (pure-Rust TLS, cross-compiles cleanly)
